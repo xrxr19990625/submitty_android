@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SubmittyProject</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="post_title">Title…</string>
+    <string name="post_message">Describe the problem you encountered…</string>
+    <string name="post_button">POST</string>
+    <string name="search_hint">Search for a thread</string>
+    <string name="reply_hint">Reply to…</string>
+    <string name="reply_btn">SEND</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

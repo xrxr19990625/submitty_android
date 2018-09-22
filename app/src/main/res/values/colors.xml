@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="themeColor">#006398</color>
+    <color name="gray">#aaa</color>
+    <color name="translucent_background">#90006398</color>
+    <color name="lightgray">#FFEEEEEE</color>
+    <color name="replies_tag_bg">#f5f5f5</color>
+    <color name="replies_tag_txt">#b1b1b1</color>
+</resources>
