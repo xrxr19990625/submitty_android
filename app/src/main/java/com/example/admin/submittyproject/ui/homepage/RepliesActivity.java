@@ -3,6 +3,7 @@ package com.example.admin.submittyproject.ui.homepage;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -56,7 +57,7 @@ public class RepliesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_replies);
         ButterKnife.bind(this);
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+        final Bundle bundle = intent.getExtras();
         id = bundle.getInt("id");
         forum = Forum.getInstance(this);
         forum.queryDetail(id, new Forum.DetailListener() {
@@ -66,19 +67,28 @@ public class RepliesActivity extends AppCompatActivity {
                 tvPostUsername.setText((String)root.get("username"));
                 tvThreadPostTime.setText(TimeConverter.timestampToDateAndTime((long)root.get("time")));
                 tvThreadBody.setText((String)root.get("message"));
-                RepliesAdapter repliesAdapter = new RepliesAdapter(replies, RepliesActivity.this);
+                final RepliesAdapter repliesAdapter = new RepliesAdapter(replies, RepliesActivity.this);
                 lvReplies.setAdapter(repliesAdapter);
                 lvReplies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putString("username", (String) repliesAdapter.getItem(i).get("username"));
+                        bundle1.putInt("root_id", (int)repliesAdapter.getItem(i).get("id"));
+                        bundle1.putInt("root_thread", id);
+                        bundle1.putString("message", (String)repliesAdapter.getItem(i).get("message"));
+                        bundle1.putString("time", TimeConverter.timestampToDateAndTime((long)repliesAdapter.getItem(i).get("time")));
+                        Intent intent1 = new Intent(RepliesActivity.this, RRepliesActivity.class);
+                        intent1.putExtras(bundle1);
+                        startActivity(intent1);
                     }
                 });
             }
 
             @Override
             public void onFailure(int errorCode) {
-
+                Toast.makeText(RepliesActivity.this, "Network Failure", Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }

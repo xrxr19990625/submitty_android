@@ -53,7 +53,7 @@
         android:layout_marginStart="20dp"
         >
         <TextView
-            android:id="@+id/tv_replies"
+            android:id="@+id/tv_no_of_replies"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:textSize="17sp"

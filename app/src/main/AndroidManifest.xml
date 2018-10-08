@@ -25,8 +25,9 @@
         <activity android:name=".ui.HomeActivity" />
         <activity
             android:name=".ui.homepage.AddPostActivity"
-            android:theme="@style/translucent"></activity>
-        <activity android:name=".ui.homepage.RepliesActivity"></activity>
+            android:theme="@style/translucent" />
+        <activity android:name=".ui.homepage.RepliesActivity" />
+        <activity android:name=".ui.homepage.RRepliesActivity"></activity>
     </application>
 
 </manifest>

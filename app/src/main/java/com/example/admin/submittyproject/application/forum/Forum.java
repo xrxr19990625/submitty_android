@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 import com.example.admin.submittyproject.data.Callback;
 import com.example.admin.submittyproject.data.NetworkManager;
@@ -126,12 +127,31 @@ public class Forum {
                 mNetworkManager.post(Urls.REPLY_TO_THREAD, jsonObject, new Callback() {
                     @Override
                     public void onSuccess(JSONObject response) {
-                        listener.onSuccess(null);
+                       // try {
+//                            JSONArray replies = (JSONArray)response.get("replies");
+//                            List<Map<String, Object>> replies_layout = new ArrayList<>();
+//                            for (int i = 0;i < replies.length();i ++){
+//                                Map<String, Object> reply = new HashMap<>();
+//                                JSONObject res = new JSONObject(replies.getString(i));
+//                                reply.put("id", res.getInt("id"));
+//                                reply.put("username", res.getString("username"));
+//                                reply.put("message", res.getString("message"));
+//                                reply.put("root", res.getInt("root"));
+//                                reply.put("time", res.getLong("time"));
+//                                reply.put("count", res.getInt("count"));
+//                                replies_layout.add(reply);
+//                            }
+                            listener.onSuccess(null);
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
                     }
 
                     @Override
                     public void onFailure(VolleyError error) {
-
+                        NetworkResponse s = error.networkResponse;
+                        Log.e("null", Boolean.toString(s == null));
+                        error.printStackTrace();
                     }
                 });
             } catch (IOException e) {
@@ -142,6 +162,51 @@ public class Forum {
         }
     }
 
+    public void replyToReply(int root_thread, int root_id, int parent_id, String message, String username, final ResultListener listener){
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("root_thread", root_thread);
+            jsonObject.put("root_id", root_id);
+            jsonObject.put("parent_id", parent_id);
+            jsonObject.put("message", message);
+            jsonObject.put("username", username);
+            try {
+                mNetworkManager.post(Urls.REPLY_TO_REPLY, jsonObject, new Callback() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        try {
+                            JSONArray subreplies = (JSONArray)response.get("floor");
+                            List<Map<String, Object>> subreplies_layout = new ArrayList<>();
+                            for (int i = 0;i < subreplies.length();i ++){
+                                Map<String, Object> subreply = new HashMap<>();
+                                JSONObject res = new JSONObject(subreplies.getString(i));
+                                subreply.put("id", res.getInt("id"));
+                                subreply.put("root", res.getInt("root"));
+                                subreply.put("parent", res.getInt("parent"));
+                                subreply.put("username", res.getString("username"));
+                                subreply.put("message", res.getString("message"));
+                                subreply.put("time", res.getLong("time"));
+                                subreply.put("parent_name", res.getString("parent_name"));
+                                subreplies_layout.add(subreply);
+                            }
+                            listener.onSuccess(subreplies_layout);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
     public void queryDetail(int id, final DetailListener listener){
         final JSONObject jsonObject = new JSONObject();
         try {
@@ -162,6 +227,7 @@ public class Forum {
                                 reply.put("message", res.getString("message"));
                                 reply.put("root", res.getInt("root"));
                                 reply.put("time", res.getLong("time"));
+                                reply.put("count", res.getInt("count"));
                                 replies_layout.add(reply);
                             }
                             Map<String, Object> root_layout = new HashMap<>();
@@ -171,6 +237,48 @@ public class Forum {
                             root_layout.put("title", root.getString("title"));
                             root_layout.put("message", root.getString("message"));
                             listener.onSuccess(replies_layout, root_layout);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(VolleyError error) {
+
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void querySubreplies(int root_id, final ResultListener listener){
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("floor_id", root_id);
+            try {
+                mNetworkManager.post(Urls.QUERY_SUBREPS, jsonObject, new Callback() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        try {
+                            JSONArray subreplies = (JSONArray)response.get("floor");
+                            List<Map<String, Object>> subreplies_layout = new ArrayList<>();
+                            for (int i = 0;i < subreplies.length();i ++){
+                                Map<String, Object> subreply = new HashMap<>();
+                                JSONObject res = new JSONObject(subreplies.getString(i));
+                                subreply.put("id", res.getInt("id"));
+                                subreply.put("root", res.getInt("root"));
+                                subreply.put("parent", res.getInt("parent"));
+                                subreply.put("username", res.getString("username"));
+                                subreply.put("message", res.getString("message"));
+                                subreply.put("time", res.getLong("time"));
+                                subreply.put("parent_name", res.getString("parent_name"));
+                                subreplies_layout.add(subreply);
+                            }
+                            listener.onSuccess(subreplies_layout);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

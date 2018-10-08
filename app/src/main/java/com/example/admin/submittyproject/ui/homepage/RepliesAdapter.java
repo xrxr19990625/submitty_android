@@ -1,6 +1,7 @@
 package com.example.admin.submittyproject.ui.homepage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class RepliesAdapter extends BaseAdapter{
             viewHolder.user_id = view.findViewById(R.id.tv_replyUsername);
             viewHolder.time = view.findViewById(R.id.tv_replyPostTime);
             viewHolder.message = view.findViewById(R.id.tv_replyBody);
+            viewHolder.no_of_replies = view.findViewById(R.id.tv_no_of_replies);
             view.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) view.getTag();
@@ -58,10 +60,11 @@ public class RepliesAdapter extends BaseAdapter{
         viewHolder.user_id.setText((String)this.getItem(i).get("username"));
         viewHolder.message.setText((String)this.getItem(i).get("message"));
         viewHolder.time.setText(TimeConverter.timestampToDateAndTime((long)this.getItem(i).get("time")));
+        viewHolder.no_of_replies.setText(Integer.toString((int)this.getItem(i).get("count")) + " replies to this floor");
         return view;
     }
 
     public class ViewHolder{
-        TextView user_id, time, message;
+        TextView user_id, time, message, no_of_replies;
     }
 }
